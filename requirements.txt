@@ -1,0 +1,25 @@
+# Core
+pandas==2.2.2
+numpy==1.26.4
+scikit-learn==1.4.2
+
+# Imbalanced learning (SMOTE)
+imbalanced-learn==0.12.2
+
+# Model explainability
+shap==0.45.0
+
+# Plotting and visualization
+matplotlib==3.8.4
+seaborn==0.13.2
+
+# Notebook support
+jupyterlab==4.1.5
+notebook==7.1.2
+
+# Optional: For saving and loading models
+joblib==1.4.0
+
+# Compatibility
+xgboost==2.0.3
+#
