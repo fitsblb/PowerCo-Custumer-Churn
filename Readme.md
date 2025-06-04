@@ -23,7 +23,7 @@ PowerCo has observed increased customer attrition, particularly in the SME segme
 
 ### 1. **Data Understanding & Preparation**
 
-* **Sources**: Two datasets from Kaggle (Client and Price data)
+* **Sources**: Two datasets from Forage (Client and Price data)
 * Merged based on `id`, using group-level price aggregation and engineered pricing features
 * Handled missing values, date parsing, and outlier detection
 
