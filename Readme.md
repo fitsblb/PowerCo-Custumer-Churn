@@ -94,7 +94,6 @@ The SHAP analysis reveals the top drivers of churn:
 ## ⚠️ Challenges Encountered
 
 * High class imbalance: <11% churn rate addressed via SMOTE
-* No explicit churn label initially – required inferencing from product modification and contract end
 * Complex feature space with overlapping economic indicators
 * One-hot encoding led to feature explosion; managed through pipeline abstraction
 
