@@ -21,6 +21,6 @@ ipykernel
 # Optional: For saving and loading models
 joblib
 
-# Compatibility
+# Model training
 xgboost
-#
+statsmodels
