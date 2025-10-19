@@ -1,0 +1,89 @@
+{
+  "models": {
+    "fold_1": {
+      "model_path": "Model\\xgboost_fold_1.pkl",
+      "calibrator_path": "Model\\isotonic_calibrator_fold_1.pkl",
+      "metrics": {
+        "fold": 1,
+        "val_roc_auc": 0.9687893658655906,
+        "val_pr_auc": 0.9185788693819228,
+        "val_brier": 0.03981703096934,
+        "ece": 0.14660758206035723,
+        "recall_at_threshold": 0.9438405797101449,
+        "precision_at_threshold": 0.7799401197604791
+      }
+    },
+    "fold_2": {
+      "model_path": "Model\\xgboost_fold_2.pkl",
+      "calibrator_path": "Model\\isotonic_calibrator_fold_2.pkl",
+      "metrics": {
+        "fold": 2,
+        "val_roc_auc": 0.9619244039862719,
+        "val_pr_auc": 0.9108292021412916,
+        "val_brier": 0.04318142479949586,
+        "ece": 0.09951567152972382,
+        "recall_at_threshold": 0.9221014492753623,
+        "precision_at_threshold": 0.755192878338279
+      }
+    },
+    "fold_3": {
+      "model_path": "Model\\xgboost_fold_3.pkl",
+      "calibrator_path": "Model\\isotonic_calibrator_fold_3.pkl",
+      "metrics": {
+        "fold": 3,
+        "val_roc_auc": 0.9651389495125855,
+        "val_pr_auc": 0.9076947873025496,
+        "val_brier": 0.04296111053763424,
+        "ece": 0.09628911982210553,
+        "recall_at_threshold": 0.9401088929219601,
+        "precision_at_threshold": 0.74
+      }
+    },
+    "fold_4": {
+      "model_path": "Model\\xgboost_fold_4.pkl",
+      "calibrator_path": "Model\\isotonic_calibrator_fold_4.pkl",
+      "metrics": {
+        "fold": 4,
+        "val_roc_auc": 0.9543515051268503,
+        "val_pr_auc": 0.8997997028429403,
+        "val_brier": 0.04159231476314217,
+        "ece": 0.12178328445020145,
+        "recall_at_threshold": 0.9292196007259528,
+        "precision_at_threshold": 0.7463556851311953
+      }
+    },
+    "fold_5": {
+      "model_path": "Model\\xgboost_fold_5.pkl",
+      "calibrator_path": "Model\\isotonic_calibrator_fold_5.pkl",
+      "metrics": {
+        "fold": 5,
+        "val_roc_auc": 0.9693185385987886,
+        "val_pr_auc": 0.9211983657113609,
+        "val_brier": 0.04300486404751951,
+        "ece": 0.10038536295114467,
+        "recall_at_threshold": 0.9165154264972777,
+        "precision_at_threshold": 0.7481481481481481
+      }
+    }
+  },
+  "best_model": {
+    "fold": 5,
+    "model_path": "Model\\xgboost_best_model.pkl",
+    "calibrator_path": "Model\\isotonic_calibrator_best.pkl",
+    "val_pr_auc": 0.9211983657113609,
+    "val_roc_auc": 0.9693185385987886,
+    "reason": "Selected by max PR-AUC (most relevant for imbalanced data)"
+  },
+  "metadata": {
+    "path": "Model\\model_metadata.json",
+    "description": "Model hyperparameters, metrics, business parameters, features"
+  },
+  "feature_metadata": {
+    "path": "Model\\feature_metadata.json",
+    "description": "Feature engineering audit trail, source columns, transformations"
+  },
+  "inference_template": {
+    "path": "Model\\production_inference_template.py",
+    "description": "Example code for loading model and scoring new customers"
+  }
+}
