@@ -1,3 +1,9 @@
 
 # Python virtual environment
 venv/
+Data/*csv
+*.log
+EDA_Workplan.md
+Data/*.csv
+archive/
+artifacts/

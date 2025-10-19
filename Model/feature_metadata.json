@@ -1,0 +1,169 @@
+{
+  "observation_point": "2015-12-31",
+  "churn_window": "2016-01-01 to 2016-03-31",
+  "churn_definition": "Binary: 1 if contract ended in Q1 2016, 0 otherwise",
+  "total_features": 20,
+  "numeric_features": 17,
+  "categorical_features": 3,
+  "features": {
+    "tenure_years": {
+      "type": "numeric",
+      "source_column": "num_years_antig",
+      "definition": "Customer tenure in years (static)",
+      "leak_safe": true,
+      "transformation": "Direct from raw (renamed for clarity)"
+    },
+    "tenure_risk_score": {
+      "type": "numeric",
+      "source_column": "tenure_years",
+      "definition": "1 / (1 + tenure_years); higher = more risk",
+      "leak_safe": true,
+      "transformation": "Inverse function (continuous risk scale)"
+    },
+    "margin_net_pow_ele": {
+      "type": "numeric",
+      "source_column": "margin_net_pow_ele",
+      "definition": "Net margin on power subscription (price sensitivity proxy)",
+      "leak_safe": true,
+      "transformation": "Direct from raw",
+      "churn_correlation": 0.0958,
+      "note": "Strongest univariate driver in EDA"
+    },
+    "cons_12m": {
+      "type": "numeric",
+      "source_column": [
+        "cons",
+        "12m"
+      ],
+      "definition": "cons_12m",
+      "leak_safe": true,
+      "transformation": "Direct from raw or aggregated from 2015 price data"
+    },
+    "cons_last_month": {
+      "type": "numeric",
+      "source_column": [
+        "cons",
+        "last"
+      ],
+      "definition": "cons_last_month",
+      "leak_safe": true,
+      "transformation": "Direct from raw or aggregated from 2015 price data"
+    },
+    "cons_trend_ratio": {
+      "type": "numeric",
+      "source_column": [
+        "cons_last_month",
+        "cons_12m"
+      ],
+      "definition": "cons_last_month / (cons_12m / 12)",
+      "leak_safe": true,
+      "transformation": "Ratio of recent to average consumption",
+      "note": "3.3pp churn effect (Declining 11.8% vs Growing 8.5%)"
+    },
+    "engagement_score": {
+      "type": "ordinal",
+      "source_column": [
+        "cons_level_bucket",
+        "cons_trend_category"
+      ],
+      "definition": "Composite 1-5 score (Low+Declining=1, High+Growing=5)",
+      "leak_safe": true,
+      "transformation": "Combination of consumption level + trend",
+      "note": "Captures high-order interaction (13.6% vs 7.9% churn)"
+    },
+    "dual_fuel_flag": {
+      "type": "binary",
+      "source_column": "has_gas",
+      "definition": "1 if has_gas=\"t\", 0 otherwise",
+      "leak_safe": true,
+      "transformation": "Binary encoding",
+      "note": "1.86pp churn reduction for dual-fuel (8.2% vs 10%)"
+    },
+    "multi_product_flag": {
+      "type": "binary",
+      "source_column": "nb_prod_act",
+      "definition": "1 if nb_prod_act >= 2, 0 otherwise",
+      "leak_safe": true,
+      "transformation": "Binary flag from count",
+      "note": "Lock-in effect; cross-sell lever"
+    },
+    "price_var_mean_all": {
+      "type": "numeric",
+      "source_column": [
+        "price",
+        "var"
+      ],
+      "definition": "price_var_mean_all",
+      "leak_safe": true,
+      "transformation": "Direct from raw or aggregated from 2015 price data"
+    },
+    "price_fix_mean_all": {
+      "type": "numeric",
+      "source_column": [
+        "price",
+        "fix"
+      ],
+      "definition": "price_fix_mean_all",
+      "leak_safe": true,
+      "transformation": "Direct from raw or aggregated from 2015 price data"
+    },
+    "price_var_volatility": {
+      "type": "numeric",
+      "source_column": [
+        "price",
+        "var"
+      ],
+      "definition": "price_var_volatility",
+      "leak_safe": true,
+      "transformation": "Direct from raw or aggregated from 2015 price data"
+    },
+    "price_fix_volatility": {
+      "type": "numeric",
+      "source_column": [
+        "price_off_peak_fix_std",
+        "price_peak_fix_std",
+        "price_mid_peak_fix_std"
+      ],
+      "definition": "Mean std of fixed prices across 2015",
+      "leak_safe": true,
+      "transformation": "Average of 3 fixed-price volatility measures",
+      "note": "+35.5% higher in churned cohort (EDA Step 5)"
+    },
+    "price_stability_score": {
+      "type": "numeric",
+      "source_column": "price_fix_volatility",
+      "definition": "1 / (1 + price_fix_volatility); higher = more stable",
+      "leak_safe": true,
+      "transformation": "Inverse function (interpretation-friendly)",
+      "note": "Range 0.07-1.0; mean 0.934"
+    },
+    "price_spread_peak_offpeak": {
+      "type": "numeric",
+      "source_column": [
+        "price",
+        "spread"
+      ],
+      "definition": "price_spread_peak_offpeak",
+      "leak_safe": true,
+      "transformation": "Direct from raw or aggregated from 2015 price data"
+    },
+    "total_price_burden": {
+      "type": "numeric",
+      "source_column": [
+        "total",
+        "price"
+      ],
+      "definition": "total_price_burden",
+      "leak_safe": true,
+      "transformation": "Direct from raw or aggregated from 2015 price data"
+    },
+    "channel_encoded": {
+      "type": "numeric",
+      "source_column": "channel_sales",
+      "definition": "Target-encoded mean churn rate per channel",
+      "leak_safe": true,
+      "transformation": "Mean churn per channel (2015-2016 Q1 data)",
+      "note": "Range 0.0-0.2475; captures 5.6%-24.75% variance"
+    }
+  }
+}
