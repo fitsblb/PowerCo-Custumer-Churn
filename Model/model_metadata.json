@@ -1,0 +1,114 @@
+{
+  "model_type": "XGBoost",
+  "calibration_method": "Isotonic Regression",
+  "training_date": "2025-10-18",
+  "observation_point": "2015-12-31",
+  "churn_window": "2016-01-01 to 2016-03-31",
+  "random_seed": 42,
+  "n_folds": 5,
+  "optimal_threshold": 0.05,
+  "expected_utility_per_cohort_eur": 35865,
+  "cross_fold_metrics": {
+    "mean_val_roc_auc": 0.9639045526180172,
+    "std_val_roc_auc": 0.005474999275420422,
+    "cv_pct_val_roc_auc": 0.568002221853816,
+    "mean_val_pr_auc": 0.9116201854760131,
+    "std_val_pr_auc": 0.007693153234636467,
+    "cv_pct_val_pr_auc": 0.8438989567370535,
+    "mean_val_brier": 0.04211134902342636,
+    "mean_ece": 0.11291620416270653
+  },
+  "per_fold_metrics": [
+    {
+      "fold": 1,
+      "val_roc_auc": 0.9687893658655906,
+      "val_pr_auc": 0.9185788693819228,
+      "val_brier": 0.03981703096934,
+      "ece": 0.14660758206035723,
+      "recall_at_threshold": 0.9438405797101449,
+      "precision_at_threshold": 0.7799401197604791
+    },
+    {
+      "fold": 2,
+      "val_roc_auc": 0.9619244039862719,
+      "val_pr_auc": 0.9108292021412916,
+      "val_brier": 0.04318142479949586,
+      "ece": 0.09951567152972382,
+      "recall_at_threshold": 0.9221014492753623,
+      "precision_at_threshold": 0.755192878338279
+    },
+    {
+      "fold": 3,
+      "val_roc_auc": 0.9651389495125855,
+      "val_pr_auc": 0.9076947873025496,
+      "val_brier": 0.04296111053763424,
+      "ece": 0.09628911982210553,
+      "recall_at_threshold": 0.9401088929219601,
+      "precision_at_threshold": 0.74
+    },
+    {
+      "fold": 4,
+      "val_roc_auc": 0.9543515051268503,
+      "val_pr_auc": 0.8997997028429403,
+      "val_brier": 0.04159231476314217,
+      "ece": 0.12178328445020145,
+      "recall_at_threshold": 0.9292196007259528,
+      "precision_at_threshold": 0.7463556851311953
+    },
+    {
+      "fold": 5,
+      "val_roc_auc": 0.9693185385987886,
+      "val_pr_auc": 0.9211983657113609,
+      "val_brier": 0.04300486404751951,
+      "ece": 0.10038536295114467,
+      "recall_at_threshold": 0.9165154264972777,
+      "precision_at_threshold": 0.7481481481481481
+    }
+  ],
+  "features": [
+    "tenure_years",
+    "tenure_risk_score",
+    "margin_net_pow_ele",
+    "cons_12m",
+    "cons_last_month",
+    "cons_trend_ratio",
+    "engagement_score",
+    "dual_fuel_flag",
+    "multi_product_flag",
+    "price_var_mean_all",
+    "price_fix_mean_all",
+    "price_var_volatility",
+    "price_fix_volatility",
+    "price_stability_score",
+    "price_spread_peak_offpeak",
+    "total_price_burden",
+    "channel_encoded",
+    "cons_level_bucket_Low",
+    "cons_level_bucket_Medium",
+    "cons_level_bucket_Very_High",
+    "cons_level_bucket_Very_Low"
+  ],
+  "n_features": 20,
+  "model_hyperparameters": {
+    "n_estimators": 200,
+    "max_depth": 6,
+    "learning_rate": 0.05,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "random_state": 42,
+    "eval_metric": "logloss"
+  },
+  "business_utility_parameters": {
+    "retention_value_eur": 100,
+    "contact_cost_eur": 5,
+    "churn_loss_eur": 500,
+    "threshold_selected": 0.05,
+    "expected_utility_calculation": "TP*100 - FP*5 - FN*500"
+  },
+  "stability_check": {
+    "passes_roc_auc_criterion": true,
+    "passes_pr_auc_criterion": true,
+    "status": "PRODUCTION_READY"
+  },
+  "notes": "Churn defined as Q1 2016 contract ends (18.88%). Features leak-safe (all from 2015-12-31 or earlier)."
+}

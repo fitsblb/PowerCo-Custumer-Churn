@@ -146,14 +146,7 @@ We conducted a rigorous 9-step EDA on 14,606 PowerCo customers to understand chu
 | **Bundling** | Dual-fuel @ 8.2% vs. Electricity-only @ 10.0% = 1.86 pp diff | Cross-sell gas to electricity customers; increases switching costs 18% |
 | **Channel** | Primary @ 12.1% vs. Low-churn @ 5.6% = 6.5 pp diff | Some channels attract price-sensitive customers; invest in relationship-driven channels or improve primary channel support |
 
-### Why Previous Model Underperformed
 
-Based on domain knowledge, your previous model likely:
-1. **Used price LEVEL instead of VOLATILITY** — price level is weak; volatility is strong
-2. **Didn't engineer consumption TREND** — used raw consumption or none at all; trend is 3.3 pp effect
-3. **Ignored bundling explicitly** — treated gas as data, not retention lever
-4. **Didn't prioritize tenure risk** — didn't segment young customers as highest-risk
-5. **Used wrong backtesting** — might have used random K-fold without temporal awareness (though single-point is correct here)
 
 ### This Model's Competitive Advantages
 
