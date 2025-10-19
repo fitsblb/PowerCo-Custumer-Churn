@@ -1,6 +1,17 @@
-# PowerCo Customer Churn Prediction: End-to-End ML Pipeline
+# PowerCo Customer Churn Prediction
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-Latest-orange.svg)](https://xgboost.readthedocs.io/)
+[![Scikit-learn](https://img.shields.io/badge/scikit--learn-1.0+-blue.svg)](https://scikit-learn.org/)
+[![SHAP](https://img.shields.io/badge/SHAP-Explainability-brightgreen.svg)](https://shap.readthedocs.io/)
+[![Pandas](https://img.shields.io/badge/Pandas-1.3+-blueviolet.svg)](https://pandas.pydata.org/)
+[![NumPy](https://img.shields.io/badge/NumPy-1.21+-blue.svg)](https://numpy.org/)
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-3.4+-yellow.svg)](https://matplotlib.org/)
+[![Status: Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](#)
+[![License: Internal Use](https://img.shields.io/badge/License-Internal%20Use%20Only-red.svg)](#)
 
-> **Production-grade machine learning model for customer churn prediction and retention strategy optimization. Delivers 96.4% ROC-AUC with actionable SHAP-driven retention insights.**
+> **A Machine learning model for customer churn prediction and retention strategy optimization. Delivers 96.4% ROC-AUC with actionable SHAP-driven retention insights.**
+
+
 
 ---
 
@@ -99,6 +110,10 @@ PowerCo observes elevated churn and lacks predictive insight into which customer
 
 **Rationale for Redefinition**: Original dataset label (9.72%) was undefined and misaligned with price data (2015). We redefined churn as Q1 2016 contract ends for transparency and leak-safety. See [Limitations](#limitations--caveats) for full discussion.
 
+>![alt text](Outputs/eda/churn_distribution.png)
+
+**Churn Distribution**
+
 ### Key Data Characteristics
 
 - **Coverage**: 100% of clients have price data; no missing raw features
@@ -133,7 +148,8 @@ Our EDA comprised 9 rigorous steps to answer key questions:
 
 **Implication**: Young customers (2–3yr) warrant prioritized retention budget.
 
-**[PLACEHOLDER: Insert Tenure vs. Churn Rate Box Plot]**
+> ![alt text](Outputs/eda/lifecycle_stage_churn_distribution.png)
+**Tenure vs. Churn Rate Box Plot**
 
 - X-axis: Tenure buckets (<2yr, 2-3yr, 3-5yr, 5-10yr, 10+yr)
 - Y-axis: Churn rate (%)
@@ -148,13 +164,9 @@ Our EDA comprised 9 rigorous steps to answer key questions:
 - Price level: Weak univariate signal (r<0.05)
 
 **Key Insight**: Customers hate bill unpredictability; they hate surprises more than high prices.
+>![alt text](Outputs/eda/price_feature_distributions.png)
+**Price Volatility Distribution – Churned vs. Active**
 
-**[PLACEHOLDER: Insert Price Volatility Distribution – Churned vs. Active]**
-
-- Histogram or violin plot: price_fix_volatility
-- Two overlaid distributions (churned in red, active in blue)
-- Mean/median lines labeled
-- Clear separation visible
 
 #### Q5: How does consumption relate to engagement and churn?
 
@@ -193,11 +205,12 @@ Our EDA comprised 9 rigorous steps to answer key questions:
 
 **Implication**: Linear models will underperform; tree-based models should shine.
 
-**[PLACEHOLDER: Insert Correlation Heatmap]**
+> ![alt text](Outputs/eda/churn_correlations_bar.png)
+**Correlation Heatmap**
 
 - All 26 raw features vs. churn
 - Sorted by absolute correlation magnitude
-- Top 15 labeled
+- Top 14 labeled
 - Red (positive churn drivers), blue (protective)
 
 #### Q8: Is there temporal drift or segment variation?
@@ -217,9 +230,19 @@ Our EDA comprised 9 rigorous steps to answer key questions:
 - Use: Single-point observation + stratified K-fold CV
 - Stratify on lifecycle_stage (tenure buckets) to ensure demographic balance
 
-**[PLACEHOLDER: Insert EDA Summary Table]**
+**EDA Summary Table**
 
-```
+| Driver | Effect | Why It Matters |
+|--------|--------|----------------|
+| **Tenure (youngest cohort)** | 2–3yr @ 13.5% vs. 5–10yr @ 7.0% = 6.5 pp diff | Young customers are elastic to competitors; retention budget here has highest ROI |
+| **Price volatility** | +15–35% higher in churned cohort | Customers don't hate high prices if STABLE; they hate surprises. Offer price locks. |
+| **Consumption trend** | Declining @ 11.8% vs. Growing @ 8.5% = 3.3 pp diff | Declining usage signals disengagement; early warning system for intervention |
+| **Bundling** | Dual-fuel @ 8.2% vs. Electricity-only @ 10.0% = 1.86 pp diff | Cross-sell gas to electricity customers; increases switching costs 18% |
+| **Channel** | Primary @ 12.1% vs. Low-churn @ 5.6% = 6.5 pp diff | Some channels attract price-sensitive customers; invest in relationship-driven channels or improve primary channel support |
+
+
+
+
 Step | Question | Finding | Business Impact
 -----|----------|---------|----------------
 1    | Churn def | Q1 2016 | Leak-safe labeling
@@ -231,19 +254,22 @@ Step | Question | Finding | Business Impact
 7    | Correlation | Low univariate | Use tree models
 8    | Drift | None detected | Single global model
 9    | Backtest | Single-point + K-fold | 5 balanced folds
-```
+
+
 
 ### EDA Conclusions
 
-✅ **Data quality**: High (no nulls, valid timestamps)
-✅ **Churn drivers identified**: Pricing (volatility + margin), tenure risk, consumption trend
-✅ **Univariate signals weak**: Tree models essential
-✅ **No temporal drift**: Single global model safe
-✅ **Imbalance manageable**: 18.88% minority class; stratification + class weights sufficient
+- ✅ **Data quality**: High (no nulls, valid timestamps)
+- ✅ **Churn drivers identified**: Pricing (volatility + margin), tenure risk, consumption trend
+- ✅ **Univariate signals weak**: Tree models essential
+- ✅ **No temporal drift**: Single global model safe
+- ✅ **Imbalance manageable**: 18.88% minority class; stratification + class weights sufficient
 
 ---
 
 ## Feature Engineering
+
+
 
 ### Philosophy
 
@@ -339,7 +365,8 @@ Churn Label:
 Conclusion: ✅ ZERO LEAKAGE
 ```
 
-**[PLACEHOLDER: Insert Feature Engineering Pipeline Diagram]**
+>![alt text](Outputs/feature_engineering/feature_engineering_pipeline.png)
+**Feature Engineering Pipeline Diagram**
 
 - Box: Raw Data (client_data.csv + price_data.csv)
 - Arrows to: Outlier Handling → Encoding → Stratified K-Fold → Feature Matrix
@@ -460,7 +487,8 @@ Where:
 - Contact cost €50 → optimal threshold ~0.25 (fewer false positives)
 - Churn loss €200 → optimal threshold ~0.35 (less aggressive)
 
-**[PLACEHOLDER: Insert Decision Curve Plot]**
+>![alt text](Outputs/modelling/xgb_decision_curve.png)
+**Decision Curve Plot**
 
 - X-axis: Classification threshold (0.0 to 1.0)
 - Y-axis: Business utility (€)
@@ -502,7 +530,8 @@ Trained XGBoost on all 5 folds; reported post-calibration metrics:
 
 ### Calibration Plots
 
-**[PLACEHOLDER: Insert Pre vs. Post-Calibration Plots]**
+>![alt text](Outputs/modelling/calibration_plots.png)
+**Pre vs. Post-Calibration Plots**
 
 - Side-by-side calibration curves
 - Pre-Cal (left): Bunched at extremes, far from diagonal (ECE: 0.2330)
@@ -522,7 +551,8 @@ Trained XGBoost on all 5 folds; reported post-calibration metrics:
 - PR-AUC: 0.9116 (exceptional for 18.88% minority class; far above 0.189 baseline)
 - **Interpretation**: Model excels at both identifying churners and minimizing false alarms
 
-**[PLACEHOLDER: Insert ROC & PR Curves]**
+>![alt text](Outputs/modelling/roc_pr_curves.png)
+**ROC & PR Curves**
 
 - ROC curve (TPR vs. FPR)
 - PR curve (Precision vs. Recall)
@@ -531,7 +561,8 @@ Trained XGBoost on all 5 folds; reported post-calibration metrics:
 
 ### Cross-Fold Stability Visualization
 
-**[PLACEHOLDER: Insert Box Plots - Metrics Across 5 Folds]**
+>![alt text](Outputs/modelling/cross_fold_metric_distribution.png)
+**Box Plots - Metrics Across 5 Folds**
 
 - 4 subplots: ROC-AUC, PR-AUC, Brier, ECE
 - Each subplot: Box plot + 5 fold points
@@ -562,7 +593,8 @@ SHAP (SHapley Additive exPlanations) decomposes model predictions to feature imp
 
 #### SHAP Summary Plot Interpretation
 
-**[PLACEHOLDER: Insert SHAP Beeswarm Plot]**
+>![alt text](Outputs/modelling/shap_summary_beeswarm.png)
+**SHAP Beeswarm Plot**
 
 - Y-axis: Top 15 features (margin_net_pow_ele to engagement_score)
 - X-axis: SHAP value (impact on model output)
@@ -619,7 +651,8 @@ Top 3 SHAP drivers:
 | ------------------------ | ----------------------------------- | -------------------------------------- | ----- |
 | **Gas Cross-sell** | Electricity-only (dual_fuel_flag=0) | Offer bundled rate; 10% intro discount | Sales |
 
-**[PLACEHOLDER: Insert Action Priority Matrix]**
+>![alt text](Outputs/modelling/action_priority_matrix.png)
+**Action Priority Matrix**
 
 - 2x2 matrix: Impact (low/high) vs. Urgency (low/high)
 - Plot each action (Price Lock, Margin Review, Loyalty, etc.)
@@ -765,6 +798,7 @@ jupyter notebook 00_eda.ipynb
 # Outputs: Summary statistics, visualizations, findings
 # Time: ~5 minutes
 ```
+- [EDA SUMMARY](docs/EDA_SUMMARY.md)
 
 #### 2. Feature Engineering
 
@@ -774,6 +808,7 @@ jupyter notebook 01_feature_engineering.ipynb
 # Time: ~2 minutes
 # Produces: 5 stratified folds with 20 engineered features
 ```
+- [FEATURE ENGINEERING SUMMARY](docs/FEATURE_ENGINEERING_SUMMARY.md)
 
 #### 3. Modeling & Validation
 
@@ -783,6 +818,7 @@ jupyter notebook 02_modeling.ipynb
 # Time: ~10 minutes (SHAP computation is slow)
 # Produces: xgboost_fold_1.pkl, isotonic_calibrator_fold_1.pkl, metrics
 ```
+- [MODELING AND RESULTS REPORT](docs/MODELING_AND_RESULTS_REPORT.md)
 
 #### 4. Production Inference (Template)
 
@@ -921,37 +957,6 @@ This project uses:
 
 ---
 
-## Visual Placeholders Summary
 
-For completeness, below is a checklist of visuals to integrate (saved locally):
 
-### EDA Visuals
-
-- [ ] **Churn Distribution**: Pie chart (81.12% active, 18.88% churned)
-- [ ] **Tenure vs. Churn**: Box plot or histogram (2-3yr cohort @ 18.5%)
-- [ ] **Price Volatility Distribution**: Overlaid histograms (churned vs. active; +35% effect visible)
-- [ ] **Consumption Trend vs. Churn**: 3-category bar chart (Declining 11.8%, Stable 10.6%, Growing 8.5%)
-- [ ] **Channel Churn Rates**: Bar chart (5.6–24.75% range)
-- [ ] **Correlation Heatmap**: 26 features vs. churn (top 15 labeled)
-- [ ] **EDA Summary Table**: 9 steps, findings, business impact
-
-### Feature Engineering Visuals
-
-- [ ] **Feature Engineering Pipeline**: Flow diagram (raw data → outlier handling → encoding → K-fold → feature matrix)
-
-### Modeling Visuals
-
-- [ ] **Calibration Curves**: Pre vs. post-calibration (2 subplots, ECE labeled)
-- [ ] **Decision Curve**: Threshold vs. business utility (peak at 0.05 highlighted)
-- [ ] **ROC & PR Curves**: 2 subplots with AUC values + threshold point marked
-- [ ] **Cross-Fold Stability**: 4 box plots (ROC-AUC, PR-AUC, Brier, ECE; tight clustering visible)
-
-### SHAP Visuals
-
-- [ ] **SHAP Feature Importance (Bar)**: Top 15 features by mean |SHAP|
-- [ ] **SHAP Summary Plot (Beeswarm)**: Feature impact + direction (color=feature value)
-- [ ] **Action Priority Matrix**: 2x2 (Impact vs. Urgency; bubble size = confidence)
-
----
-
-**End of README. For detailed technical documentation, see `/Reports/` directory.**
+**End of README. For detailed technical documentation, see docs directory.**
