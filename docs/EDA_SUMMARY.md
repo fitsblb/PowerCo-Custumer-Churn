@@ -15,12 +15,14 @@ We conducted a rigorous 9-step EDA on 14,606 PowerCo customers to understand chu
 ## What We Analyzed (Steps 1–9)
 
 ### Step 1: Data Load & Schema
-- **Client data**: 14,606 customers, 26 features (temporal + consumption + margins + contracts)
-- **Price data**: 193,002 monthly snapshots (12 per customer, avg) across 2015
+- **Client data**: 14,606 customers, 26 features (temporal + consumption + margins + contracts).
+- **Price data**: 193,002 monthly snapshots (12 per customer, avg) across 2015. 
 - **Alignment**: 100% of client customers have price data; 1,490 price-only customers excluded
-- **Data quality**: Zero nulls across all features (clean upstream pipeline)
+- **Data quality**: Zero nulls across all features (clean upstream pipeline) & zero duplicated rows across both datasets
 
 ### Step 2: Temporal Anchor & Churn Definition
+- **Client Data** : Date ranges from 2003-05-09 (min) to 2017-06-13 (max) across all temporal features.
+- **Price Data** : Date ranges from 2015-01-01 (min) to 2015-12-01 (max).
 - **Observation point (m_ref)**: 2015-12-31 (end of price data)
 - **Churn definition**: Binary flag (1=contract ended by 2016-03-31, 0=active)
 - **Churn rate**: 9.72% (1,419 churned / 14,606 total)
