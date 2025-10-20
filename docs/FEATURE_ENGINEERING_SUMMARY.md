@@ -222,7 +222,7 @@ Each feature has:
 
 ## Known Limitations & Trade-offs
 
-1. **Churn definition discrepancy**: Our Q1 2016 definition (18.88%) differs from original label (9.72%). Document clearly in production; revisit if business definition clarifies.
+1. **Churn definition discrepancy**: Our Q1 2016 definition (18.88%) differs from original label (9.72%). To be documented clearly in production and revisit if business definition clarifies.
 
 2. **Single observation point**: All features from one snapshot (2015-12-31). No temporal variation; can't test drift. Acceptable given data constraints (price data ends 2015-12).
 
@@ -289,7 +289,7 @@ Location: `/Data/processed/`
 
 **Feature Engineering Phase**: COMPLETE  
 **Status**: Ready for 02_modeling.ipynb  
-**Confidence Level**: 9/10
+
 
 - ✅ All 20 features engineered and validated
 - ✅ Leak-safety proven
