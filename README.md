@@ -49,7 +49,7 @@ PowerCo is a European utility provider facing **18.88% customer churn** in Q1 20
 | **Validation PR-AUC**              | 91.2%    | ✅ Exceptional for imbalanced data |
 | **Cross-Fold Stability**           | ±0.6%   | ✅ Exceeds ±10% requirement       |
 | **Recall @ Threshold 0.05**        | 93%      | ✅ Catches 93 of 100 churners      |
-| **Expected Utility (3-mo cohort)** | €35,865 | ✅ ~€12k/month ROI                |
+| **Expected Utility (3-mo cohort)** | $35,865 | ✅ ~$12k/month ROI                |
 
 ### Model Architecture
 
@@ -62,7 +62,7 @@ XGBoost Classifier (n_estimators=200, max_depth=6)
     ↓
 Isotonic Calibration (probability recalibration)
     ↓
-Threshold Optimization (€-utility maximization)
+Threshold Optimization ($-utility maximization)
     ↓
 SHAP Explainability (action mapping)
     ↓
@@ -114,11 +114,11 @@ PowerCo observes elevated churn and lacks predictive insight into which customer
 
 **Churn Distribution**
 
-### Key Data Characteristics
+### Key Data Characteristics 
 
 - **Coverage**: 100% of clients have price data; no missing raw features
 - **Observation Point**: 2015-12-31 (all features computed before any Q1 2016 churn events)
-- **Class Imbalance**: 18.88% minority class (mild imbalance; manageable with stratification + class weights)
+- **Class Imbalance**: 18.88% (Q1 2016 ) minority class (mild imbalance; manageable with stratification + class weights)
 - **Feature Types**: 17 numeric + 3 categorical (after engineering)
 
 ---
@@ -152,8 +152,8 @@ Our EDA comprised 9 rigorous steps to answer key questions:
 **Tenure vs. Churn Rate Box Plot**
 
 - X-axis: Tenure buckets (<2yr, 2-3yr, 3-5yr, 5-10yr, 10+yr)
-- Y-axis: Churn rate (%)
-- Box plot with churn counts labeled
+- Y-axis: Number of customers
+
 
 #### Q4: What are the pricing dynamics?
 
@@ -365,7 +365,7 @@ Churn Label:
 Conclusion: ✅ ZERO LEAKAGE
 ```
 
->![alt text](Outputs/feature_engineering/feature_engineering_pipeline.png)
+>![alt text](Outputs/feature_engineering/feature_engineering_pipeline_clean.png)
 **Feature Engineering Pipeline Diagram**
 
 - Box: Raw Data (client_data.csv + price_data.csv)
@@ -452,46 +452,46 @@ y_pred_calibrated = np.clip(isotonic_cal(y_pred_proba), 0, 1)
 **Cost-Benefit Framework**:
 
 ```
-Utility(threshold) = (TP × €100) - (FP × €5) - (FN × €500)
+Utility(threshold) = (TP × $100) - (FP × $5) - (FN × $500)
 
 Where:
-  TP (True Positive): Predicted churn ∩ Actual churn → Save customer (€100 value)
-  FP (False Positive): Predicted churn ∩ Actual active → Wasted contact (€5 cost)
-  FN (False Negative): Predicted active ∩ Actual churn → Lost revenue (€500 loss)
+  TP (True Positive): Predicted churn ∩ Actual churn → Save customer ($100 value)
+  FP (False Positive): Predicted churn ∩ Actual active → Wasted contact ($5 cost)
+  FN (False Negative): Predicted active ∩ Actual churn → Lost revenue ($500 loss)
 ```
 
 **Assumptions** (tunable):
 
-- **retention_value = €100**: Value of saving a churning customer
-- **contact_cost = €5**: Cost to contact one customer (email + phone + effort)
-- **churn_loss = €500**: Revenue lost from one undetected churn
+- **retention_value = $100**: Value of saving a churning customer
+- **contact_cost = $5**: Cost to contact one customer (email + phone + effort)
+- **churn_loss = $500**: Revenue lost from one undetected churn
 
 **Threshold Search Results**:
 
-| Threshold | Utility (€)       | TP            | FP            | FN           | Recall          | Precision       | Contact Vol   |
+| Threshold | Utility ($)       | TP            | FP            | FN           | Recall          | Precision       | Contact Vol   |
 | --------- | ------------------ | ------------- | ------------- | ------------ | --------------- | --------------- | ------------- |
-| 0.05      | **€35,865** | **521** | **147** | **31** | **94.4%** | **78.0%** | **668** |
-| 0.10      | €29,915           | 511           | 137           | 41           | 92.6%           | 78.9%           | 648           |
-| 0.25      | €18,095           | 491           | 101           | 61           | 89.0%           | 82.9%           | 592           |
-| 0.50      | €9,850            | 477           | 70            | 75           | 86.4%           | 87.2%           | 547           |
-| 0.65      | -€3,850           | 454           | 50            | 98           | 82.3%           | 90.1%           | 504           |
+| 0.05      | **$35,865** | **521** | **147** | **31** | **94.4%** | **78.0%** | **668** |
+| 0.10      | $29,915           | 511           | 137           | 41           | 92.6%           | 78.9%           | 648           |
+| 0.25      | $18,095           | 491           | 101           | 61           | 89.0%           | 82.9%           | 592           |
+| 0.50      | $9,850            | 477           | 70            | 75           | 86.4%           | 87.2%           | 547           |
+| 0.65      | -$3,850           | 454           | 50            | 98           | 82.3%           | 90.1%           | 504           |
 
 **Selected Threshold: 0.05**
 
-- **Rationale**: Maximizes utility (€35,865 >> any other threshold)
+- **Rationale**: Maximizes utility ($35,865 >> any other threshold)
 - **Interpretation**: Aggressive contact (94% recall); accepts 78% precision (1 in 1.28 contacted are churners)
 - **Business Action**: Contact ~670 customers per quarter; expect ~520 saves + ~150 false positives
 
 **Sensitivity**: If costs change, threshold shifts:
 
-- Contact cost €50 → optimal threshold ~0.25 (fewer false positives)
-- Churn loss €200 → optimal threshold ~0.35 (less aggressive)
+- Contact cost $50 → optimal threshold ~0.25 (fewer false positives)
+- Churn loss $200 → optimal threshold ~0.35 (less aggressive)
 
 >![alt text](Outputs/modelling/xgb_decision_curve.png)
 **Decision Curve Plot**
 
 - X-axis: Classification threshold (0.0 to 1.0)
-- Y-axis: Business utility (€)
+- Y-axis: Business utility ($)
 - Curve with peak at threshold 0.05 highlighted
 - Shaded regions showing utility gains/losses
 
@@ -671,14 +671,14 @@ Top 3 SHAP drivers:
 - [ ] **Monitoring**: Log predictions + actual labels; monitor ROC-AUC/PR-AUC drift monthly
 - [ ] **Retraining**: Quarterly retraining schedule (new Q churn labels)
 - [ ] **Retention Campaigns**: Launch price lock, margin review, loyalty campaigns
-- [ ] **A/B Testing**: Measure campaign ROI vs. €35,865 baseline utility
+- [ ] **A/B Testing**: Measure campaign ROI vs. $35,865 baseline utility
 
 ### Immediate Actions (Week 1)
 
 1. **Validate assumptions with stakeholders**:
 
    - Churn definition (Q1 2016 or original label?)
-   - Business utility parameters (€100 retention value, €5 contact cost, €500 churn loss)
+   - Business utility parameters ($100 retention value, $5 contact cost, $500 churn loss)
    - Retention campaign budget + timelines
 2. **Production integration**:
 
@@ -696,8 +696,8 @@ Top 3 SHAP drivers:
 1. **Campaign Performance**:
 
    - Track retention rate for contacted customers
-   - Measure actual ROI vs. €35,865 baseline
-   - Iterate on offer mechanics (if €100 retention value off, adjust)
+   - Measure actual ROI vs. $35,865 baseline
+   - Iterate on offer mechanics (if $100 retention value off, adjust)
 2. **Model Refinement**:
 
    - Retrain on updated labels (if new Q data available)

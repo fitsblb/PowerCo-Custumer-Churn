@@ -2,20 +2,20 @@
 
 **Project Phase**: Modeling Complete (Blocks 1–5)  
 **Model**: XGBoost with Isotonic Calibration  
-**Status**: ✅ Production-Ready  
+**Status**: ✅ Completed  
 **Date**: October 2025
 
 ---
 
 ## Executive Summary
 
-We built a **production-grade churn prediction model** that achieves:
+We built a **Churn prediction model** that achieves:
 - **96.4% ROC-AUC** (validation, post-calibration)
 - **91.2% PR-AUC** (precision-recall; exceptional for imbalanced data)
 - **Stability**: ±0.6% across 5 folds (far exceeds ±10% requirement)
 - **Actionable**: SHAP-driven insights map to 5 retention levers
 
-**Key Business Outcome**: At threshold 0.05, model captures 93% of churners with 75% precision, generating **€35,865 expected utility** per 3-month cohort.
+**Key Business Outcome**: At threshold 0.05, model captures 93% of churners with 75% precision, generating **$35,865 expected utility** per 3-month cohort.
 
 **Critical Finding**: Pricing (volatility + margin) dominates churn risk. Tenure, consumption, and bundling are secondary.
 
@@ -90,42 +90,42 @@ XGBoost captures non-linear feature interactions (high margin × high volatility
 
 ## Threshold Selection & Business Utility
 
-### Utility Function
+### Utility Function (The numbers $100, $5, $500 are assumptions based on business estimates).
+- This is a formula to score how "good" the model's predictions (money), not just percentages.
+- TP (True Positive): Model predicted churn, and the customer did churn → Business "save" them with a retention action (e.g., offer a discount). Benefit: €100 (the value of keeping the customer).
+- FP (False Positive): Model predicted churn, but the customer didn't churn → Wasted effort (e.g., Business contacted them unnecessarily). Cost: €5 (cost of the contact, like a phone call or email).
+- FN (False Negative): Model didn't predict churn, but the customer did churn → Business lose them. Cost: €500 (lost revenue from the customer leaving).
 ```
-Utility = (TP × €100) - (FP × €5) - (FN × €500)
+Utility = (TP × $100) - (FP × $5) - (FN × $500)
 
-Where:
-  TP = True Positive (predicted churn, customer churned) → Save them (€100 value)
-  FP = False Positive (predicted churn, customer active) → Wasted contact (€5 cost)
-  FN = False Negative (predicted active, customer churned) → Lost revenue (€500 loss)
 ```
 
 ### Threshold Search Results (Fold 1)
 
-| Threshold | Utility (€) | TP | FP | FN | Recall | Precision |
+| Threshold | Utility ($) | TP | FP | FN | Recall | Precision |
 |-----------|---|---|---|---|---|---|
-| **0.05** | **€35,865** | **521** | **147** | **31** | **94.4%** | **78.0%** |
-| 0.10 | €29,915 | 511 | 137 | 41 | 92.6% | 78.9% |
-| 0.15 | €29,935 | 511 | 133 | 41 | 92.6% | 79.4% |
-| 0.20 | €18,090 | 491 | 102 | 61 | 89.0% | 82.8% |
-| 0.25 | €18,095 | 491 | 101 | 61 | 89.0% | 82.9% |
-| 0.30 | €18,095 | 491 | 101 | 61 | 89.0% | 82.9% |
-| 0.35 | €18,100 | 491 | 100 | 61 | 89.0% | 83.1% |
-| 0.40 | €15,190 | 486 | 82 | 66 | 88.0% | 85.6% |
-| 0.50 | €9,850 | 477 | 70 | 75 | 86.4% | 87.2% |
-| 0.65 | -€3,850 | 454 | 50 | 98 | 82.3% | 90.1% |
+| **0.05** | **$35,865** | **521** | **147** | **31** | **94.4%** | **78.0%** |
+| 0.10 | $29,915 | 511 | 137 | 41 | 92.6% | 78.9% |
+| 0.15 | $29,935 | 511 | 133 | 41 | 92.6% | 79.4% |
+| 0.20 | $18,090 | 491 | 102 | 61 | 89.0% | 82.8% |
+| 0.25 | $18,095 | 491 | 101 | 61 | 89.0% | 82.9% |
+| 0.30 | $18,095 | 491 | 101 | 61 | 89.0% | 82.9% |
+| 0.35 | $18,100 | 491 | 100 | 61 | 89.0% | 83.1% |
+| 0.40 | $15,190 | 486 | 82 | 66 | 88.0% | 85.6% |
+| 0.50 | $9,850 | 477 | 70 | 75 | 86.4% | 87.2% |
+| 0.65 | -$3,850 | 454 | 50 | 98 | 82.3% | 90.1% |
 
 ### Optimal Threshold: 0.05
-- **Expected Utility**: €35,865 per 3-month cohort
+- **Expected Utility**: $35,865 per 3-month cohort
 - **Recall**: 94.4% (catch 94 of 100 churners)
 - **Precision**: 78.0% (1 in 1.28 predicted churners is correct)
 - **Contact Volume**: ~668 total (521 TP + 147 FP)
-- **Cost**: €3,340 (668 contacts × €5)
-- **Gross Benefit**: €52,100 (521 TP × €100 - 31 FN × €500)
+- **Cost**: $3,340 (668 contacts × $5)
+- **Gross Benefit**: $52,100 (521 TP × $100 - 31 FN × $500)
 
 **Sensitivity**: Threshold changes with business assumptions:
-- If contact cost rises to €50 → optimal threshold ~0.25 (lower recall, higher precision)
-- If churn loss drops to €200 → optimal threshold ~0.35 (less aggressive)
+- If contact cost rises to $50 → optimal threshold ~0.25 (lower recall, higher precision)
+- If churn loss drops to $200 → optimal threshold ~0.35 (less aggressive)
 
 **Note**: Negative utilities at thresholds >0.65 indicate over-conservative approach worse than random.
 
@@ -177,7 +177,7 @@ Where:
 
 | Priority | Churn Driver | SHAP Feature | Retention Lever | Action | Expected Impact | Cost/Owner |
 |-----|---|---|---|---|---|---|
-| 1 | Price Volatility | price_fix_volatility | Price Lock Offer | Contact high-volatility customers; offer 12-mo stable rate | +1.86pp retention* | €5/contact; pricing TBD |
+| 1 | Price Volatility | price_fix_volatility | Price Lock Offer | Contact high-volatility customers; offer 12-mo stable rate | +1.86pp retention* | $5/contact; pricing TBD |
 | 2 | High Margin (Price Sensitivity) | margin_net_pow_ele | Proactive Pricing Review | Account review for high-margin customers; competitive pricing refresh | +2–3pp retention** | Account mgmt team |
 | 3 | Tenure Risk (Young) | tenure_risk_score | Loyalty Program | Auto-enroll 2–3yr customers; loyalty bonus | +6.5pp retention | Loyalty team |
 | 4 | Usage Decline | cons_trend_ratio | Re-engagement | Alert on usage decline; efficiency discount offer | +3.3pp retention | Customer success |
@@ -323,10 +323,10 @@ md5sum isotonic_calibrator_fold_1.pkl
 4. Gather feedback from retention team
 
 ### Medium-term (Month 3–6)
-1. Evaluate campaign ROI; compare to €35,865 baseline utility
+1. Evaluate campaign ROI; compare to $35,865 baseline utility
 2. Retrain model on updated data (if new Q1/Q2 churn labels available)
 3. Segment analysis: Does model perform differently by customer type?
-4. Refine threshold based on actual costs (if €5 contact cost or €100 retention value were inaccurate)
+4. Refine threshold based on actual costs (if $5 contact cost or $100 retention value were inaccurate)
 
 ### Ongoing (Quarterly)
 1. Monitor model performance (ROC-AUC, PR-AUC, calibration drift)
@@ -374,7 +374,7 @@ isotonic_regression(
 - ✅ Stability: ±0.6% across 5 folds (exceeds ±10% target)
 - ✅ Calibration: Brier -34%, ECE -45% post-calibration
 - ✅ Actionability: SHAP maps churn to 5 retention levers
-- ✅ Business Value: €35,865 utility per 3-month cohort
+- ✅ Business Value: $35,865 utility per 3-month cohort
 - ✅ Reproducibility: Deterministic, seed-locked, version-controlled
 
 **Ready for**: Deployment, campaign launch, and real-time churn scoring.

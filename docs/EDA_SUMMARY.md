@@ -83,7 +83,6 @@ We conducted a rigorous 9-step EDA on 14,606 PowerCo customers to understand chu
   4. `cons_last_month`: -0.0453
   5. `cons_gas_12m`: -0.0380 (bundling effect)
 - **Multicollinearity**: Clean up redundancies
-  - `tenure_years` ≡ `num_years_antig` (r=1.0) → DROP `num_years_antig`
   - `margin_gross_pow_ele` ≈ `margin_net_pow_ele` (r=0.9999) → DROP one
   - `cons_trend_ratio` has weak univariate correlation (-0.009) BUT 3.3 pp effect in Step 6 (trees will capture)
 - **Weak/no correlation**:
@@ -179,7 +178,6 @@ We conducted a rigorous 9-step EDA on 14,606 PowerCo customers to understand chu
 - ✅ `channel_encoded_woe` = WOE per channel (from Step 8 analysis)
 
 ### Drop (Redundant or Too Weak)
-- ❌ `num_years_antig` (identical to `tenure_years`, r=1.0)
 - ❌ `tenure_days` (redundant with `tenure_years`, r=0.956)
 - ❌ `margin_gross_pow_ele` (near-identical to `margin_net_pow_ele`, r=0.9999)
 - ❌ `forecast_cons_12m`, `forecast_cons_year` (systematically wrong, -90% error)
@@ -235,7 +233,7 @@ We conducted a rigorous 9-step EDA on 14,606 PowerCo customers to understand chu
 
 ---
 
-## Data Card (Updated)
+## Data Card
 
 **Working Dataset**: 14,606 customers, 1 observation point (2015-12-31)
 
@@ -257,7 +255,7 @@ We conducted a rigorous 9-step EDA on 14,606 PowerCo customers to understand chu
 2. **Univariate correlation is misleading**: Low r-values for trend/volatility hide strong tree-based effects
 3. **Bundling is underrated**: 1.86 pp effect rivals tenure; simple to action
 4. **Data quality is high, but domain knowledge crucial**: No nulls is great, but understanding contract renewal logic required domain reading
-5. **Temporal alignment is critical**: Gap between features (2015) and labels (2016) forced design rethink; would have been masked in sloppy EDA
+5. **Temporal alignment is critical**: Gap between features (2015) and labels (2016) forced design rethink
 
 ---
 
@@ -265,7 +263,7 @@ We conducted a rigorous 9-step EDA on 14,606 PowerCo customers to understand chu
 
 **EDA Phase**: COMPLETE  
 **Status**: Ready for Feature Engineering  
-**Confidence Level**: High (9/10)  
+ 
 - All key drivers identified and validated
 - No major data quality issues
 - Backtesting strategy is sound
